@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Evaluation Rubric</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 20px;
+            background-color: #fff;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: transparent;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        thead th {
+            background-color: transparent;
+            color: #333;
+            font-weight: 600;
+            border-bottom: 2px solid #333;
+        }
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+        .category-header th {
+            background-color: transparent;
+            color: #212529;
+            text-align: left;
+            font-size: 1.1em;
+            font-weight: bold;
+            padding: 16px 12px 4px 12px;
+            border-top: 2px solid #999;
+            border-bottom: 1px solid #ccc;
+        }
+        .category-description {
+            font-size: 0.9em;
+            font-weight: normal;
+            color: #555;
+            padding-top: 4px;
+        }
+        .total-row th, .total-row td {
+            font-weight: bold;
+            background-color: transparent;
+            border-top: 2px solid #333;
+        }
+        .controls-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        td input[type="number"], td input[type="text"], td select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        th input.header-input {
+            width: 100%;
+            border: none;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;
+            padding: 6px;
+        }
+        /* Toggle Switch Styles */
+        .toggle-container { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #4CAF50; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        
+        #resultMessage {
+            display: none;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 80%;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        #resultMessage.success { border: 2px solid #28a745; background-color: #e9f7ef; color: #155724; }
+        #resultMessage.opportunity { border: 2px solid #ffc107; background-color: #fff8e1; color: #856404; }
+
+    </style>
+</head>
+<body>
+
+    <h1>LMS Evaluation Rubric</h1>
+
+    <div class="controls-container">
+        <div class="toggle-container">
+            <span>Rigorous Scoring</span>
+            <label class="switch">
+                <input type="checkbox" id="scoringToggle" onchange="toggleScoringMode()">
+                <span class="slider"></span>
+            </label>
+            <span>Quick Scoring</span>
+        </div>
+        <button onclick="calculateScores()">Calculate Scores</button>
+    </div>
+    
+    <table id="rubricTable">
+        <thead>
+            <tr>
+                <th><input type="text" class="header-input" value="Enter LMS Name Here"></th>
+                <th class="weight-col"></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>Specific Feature/Criterion</th>
+                <th class="weight-col">Weight (1-5)</th>
+                <th class="score-header">Score (1-5)</th>
+                <th>Notes/Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="category-header">
+                <th colspan="4">
+                    Ease of Use
+                    <div class="category-description">The LMS interface adapts to the device's layout to facilitate usability, navigation and interaction. The content can be viewed on a tablet, phone, or resized browser without losing functionality.</div>
+                </th>
+            </tr>
+            <tr>
+                <td>For Students</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>For Teachers</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+             <tr>
+                <td>For Teachers to Share and Update Courses</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+
+            <tr class="category-header">
+                <th colspan="4">
+                    User Interface
+                    <div class="category-description">The LMS interface is clean, modern and has an attractive design.</div>
+                </th>
+            </tr>
+            <tr>
+                <td>Intuitive Navigation</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Adaptable for Various Use Cases</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Multilingual Support</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+
+            <tr class="category-header">
+                <th colspan="4">
+                    Admin Ability and Reporting
+                    <div class="category-description">LMS provides high level content sharing capabilities, accessible and actionable data.</div>
+                </th>
+            </tr>
+             <tr>
+                <td>Ability for Admin to Disseminate and share HQIM (High Quality Instructional Materials)</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+             <tr>
+                <td>Data Availability (within the Interface)</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+             <tr>
+                <td>Interoperability with Other Tools</td>
+                <td class="weight-col"><input type="number" min="1" max="5"></td>
+                <td class="score-cell"><input type="number" min="1" max="5"></td>
+                <td><input type="text"></td>
+            </tr>
+
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <th>Total Weighted Score</th>
+                <td class="weight-col"></td>
+                <td id="lms-total">0</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div id="resultMessage"></div>
+
+
+    <script>
+        let isQuickScoring = false;
+
+        function toggleScoringMode() {
+            isQuickScoring = document.getElementById('scoringToggle').checked;
+            const scoreCells = document.querySelectorAll('.score-cell');
+            const scoreHeader = document.querySelector('.score-header');
+            const weightColumns = document.querySelectorAll('.weight-col');
+            const categoryHeaders = document.querySelectorAll('.category-header th');
+
+            weightColumns.forEach(col => {
+                col.style.display = isQuickScoring ? 'none' : '';
+            });
+            
+            categoryHeaders.forEach(th => {
+                th.colSpan = isQuickScoring ? 3 : 4;
+            });
+
+            if (isQuickScoring) {
+                scoreHeader.innerText = 'Score';
+                scoreCells.forEach(cell => {
+                    cell.innerHTML = `
+                        <select>
+                            <option value="0" selected>N/A</option>
+                            <option value="1">Not Really</option>
+                            <option value="2">Kind of</option>
+                            <option value="3">Definitely</option>
+                        </select>
+                    `;
+                });
+            } else {
+                scoreHeader.innerText = 'Score (1-5)';
+                scoreCells.forEach(cell => {
+                    cell.innerHTML = '<input type="number" min="1" max="5">';
+                });
+            }
+        }
+
+        function calculateScores() {
+            const table = document.getElementById('rubricTable');
+            const rows = table.querySelectorAll('tbody tr:not(.category-header)');
+            
+            let totalScore = 0;
+            let maxPossibleScore = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let score = 0;
+                
+                if (isQuickScoring) {
+                    const scoreSelect = cells[1].querySelector('select'); // Index changes to 1
+                    score = parseInt(scoreSelect.value, 10) || 0;
+                    if (score > 0) { // Only count rows that have been scored
+                        totalScore += score;
+                        maxPossibleScore += 3; // Max score is 3 for "Definitely"
+                    }
+                } else { // Rigorous scoring
+                    const weightInput = cells[1].querySelector('input');
+                    if (weightInput && weightInput.value) {
+                        const weight = parseInt(weightInput.value, 10) || 0;
+                        const scoreInput = cells[2].querySelector('input');
+                        score = parseInt(scoreInput.value, 10) || 0;
+                        
+                        totalScore += weight * score;
+                        maxPossibleScore += weight * 5; // Max score is 5 for rigorous
+                    }
+                }
+            }
+
+            document.getElementById('lms-total').innerText = totalScore;
+            
+            const resultDiv = document.getElementById('resultMessage');
+            if (maxPossibleScore === 0) {
+                resultDiv.style.display = 'none';
+                return;
+            }
+
+            const percentage = (totalScore / maxPossibleScore) * 100;
+            
+            if (percentage >= 90) {
+                resultDiv.innerHTML = "We're so glad your LMS is working so well! If you ever need anything about evaluating your LMS, please don't hesitate to reach out.";
+                resultDiv.className = 'success';
+            } else {
+                resultDiv.innerHTML = "It looks like there is an opportunity to evaluate your LMS further. If you're interested in speaking with your account representative, please find their information and more below!";
+                resultDiv.className = 'opportunity';
+            }
+            resultDiv.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
